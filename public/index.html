@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <h3>Mini chat</h3>
+    <hr>
+    <form id="myForm">
+        <div class="row">
+            <div class="col-lg-8">
+                <input type="text" id="txtMsg" placeholder="Mensaje" class="form-control">
+            </div>
+            <div class="col-lg-4">
+                <button type="submit" class="btn btn-primary">
+                    Enviar
+                </button>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col">
+            <ul id="misMensaje">
+
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.2/socket.io.js"
+        integrity="sha512-VJ6+sp2E5rFQk05caiXXzQd1wBABpjEj1r5kMiLmGAAgwPItw1YpqsCCBtq8Yr1x6C49/mTpRdXtq8O2RcZhlQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const socket = io('http://localhost:8080');
+
+       const form = document.querySelector('#myForm');
+       const msg = document.querySelector('#misMensaje');
+       const txtMsg = document.querySelector('#txtMsg');
+       
+       form.addEventListener('submit',(event)=>{
+        event.preventDefault();
+        const newMsg = txtMsg.value;
+
+        socket.emit('msg-to-server',{
+            msg: newMsg,
+            date: new Date()
+        })
+       })
+        socket.on('msg-from-serve', (data) => {
+            console.log(data);
+            msg.innerHTML += `<li>${data.msg}</li>`
+        })
+        /*setTimeout(() => {
+            socket.emit('mensaje-de-vuelta', {
+                msg: 'Devuelvo un mensaje al servidor',
+                date: new Date()
+            })
+        }, 2000)*/
+
+    </script>
+</body>
+
+</html>
